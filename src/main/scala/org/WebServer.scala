@@ -25,7 +25,7 @@ object paths {
       concat(
         path("info") {
           get {
-            complete(HttpEntity("/api/new/info"))
+            complete(HttpEntity("Hello"))
           }
         },
         path("details") {
@@ -38,20 +38,20 @@ object paths {
 }
 
 object WebServer {
+  val route: Route =
+  pathPrefix("api") {
+    concat(
+      paths.pathInfo,
+      paths.pathDetails,
+      paths.newApi
+    )
+  }
+
   def main(args: Array[String]) {
 
     implicit val system = ActorSystem("my-system")
     implicit val materializer = ActorMaterializer()
     implicit val executionContext = system.dispatcher
-
-    val route: Route =
-      pathPrefix("api") {
-        concat(
-          paths.pathInfo,
-          paths.pathDetails,
-          paths.newApi
-        )
-      }
 
     val bindingFuture = Http().bindAndHandle(route, "localhost", 8080)
 
