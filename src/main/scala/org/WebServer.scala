@@ -8,13 +8,33 @@ import scala.io.StdIn
 import akka.http.scaladsl.server.Route
 
 object paths {
-  val pathHello1 = path("hello") {
-    concat(path("hello3") {
+  val pathInfo =
+    path("info") {
       get {
-        complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "hello"))
+        complete(HttpEntity("this is /api/info path"))
       }
-    })
+    }
+  val pathDetails = path("details") {
+    get {
+      complete(HttpEntity("this is /api/details path"))
+    }
   }
+
+  val newApi =
+    pathPrefix("new") {
+      concat(
+        path("info") {
+          get {
+            complete(HttpEntity("/api/new/info"))
+          }
+        },
+        path("details") {
+          get {
+            complete(HttpEntity("/api/new/details"))
+          }
+        }
+      )
+    }
 }
 
 object WebServer {
@@ -27,16 +47,9 @@ object WebServer {
     val route: Route =
       pathPrefix("api") {
         concat(
-          path("info") {
-            get {
-              complete(HttpEntity("this is /api/info path"))
-            }
-          },
-          path("details") {
-            get {
-              complete(HttpEntity("this is /api/details path"))
-            }
-          }
+          paths.pathInfo,
+          paths.pathDetails,
+          paths.newApi
         )
       }
 
