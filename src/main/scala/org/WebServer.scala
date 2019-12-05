@@ -43,7 +43,8 @@ object WebServer {
     concat(
       paths.pathInfo,
       paths.pathDetails,
-      paths.newApi
+      paths.newApi,
+      CreateService.createServiceRoute
     )
   }
 
