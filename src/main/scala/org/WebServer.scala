@@ -38,6 +38,11 @@ object paths {
 }
 
 object WebServer {
+  def assets = pathPrefix(("swagger")) {
+    getFromResourceDirectory("swagger") ~ pathSingleSlash(get(redirect("index.html",
+      StatusCodes.PermanentRedirect)))
+  }
+
   val route: Route =
   pathPrefix("api") {
     concat(
